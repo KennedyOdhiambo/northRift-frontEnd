@@ -1,36 +1,56 @@
-export default function LoginForm() {
+import { useForm } from 'react-hook-form';
+import AuthInputFields from './AuthInputFields';
+import { useMutation } from '@tanstack/react-query';
+import { loginUser } from '../../services/authService';
+import { toast } from 'react-toastify';
+
+export type LoginData = {
+  phoneNumber: string;
+  password: string;
+};
+
+export default function LoginForm({ ifSuccesfull }: { ifSuccesfull: () => void }) {
+  const { register, handleSubmit } = useForm<LoginData>();
+  const { mutate } = useMutation({
+    mutationFn: loginUser,
+    onSuccess: (data) => {
+      console.log(data);
+      toast.success('Login succesfull');
+      ifSuccesfull();
+    },
+    onError: (err) => {
+      if (err instanceof Error) {
+        toast.error(err.message);
+      } else {
+        console.error('Unexpected error:', err);
+      }
+    },
+  });
+
+  const onSubmit = (data: LoginData) => {
+    mutate(data);
+  };
   return (
     <div className="w-96 p-4 sm:p-6 md:p-8">
-      <form className="space-y-6" action="#">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         <h5 className="text-xl font-semibold text-cyan-600">Log In to continue</h5>
-        <div className="flex flex-col gap-8">
-          <div>
-            <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900">
-              Your Phone Number
-            </label>
-            <input
-              type="tel"
-              name="email"
-              id="phoneNumber"
-              className="bg-gray-50 border border-gray-300 outline-none text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-              placeholder="254-XXX-XXX-XXX"
-              required
-            />
-          </div>
 
-          <div>
-            <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900">
-              Your password
-            </label>
-            <input
-              type="password"
-              name="password"
-              id="password"
-              placeholder="••••••••"
-              className="bg-gray-50 border border-gray-300 outline-none text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-              required
-            />
-          </div>
+        <div className="flex flex-col gap-8">
+          <AuthInputFields
+            label="Your Phone Number"
+            id="phoneNumber"
+            type="tel"
+            placeholder="254-XXX-XXX-XXX"
+            register={register('phoneNumber')}
+          />
+
+          <AuthInputFields
+            label="Your password"
+            id="password"
+            type="password"
+            placeholder="••••••••"
+            register={register('password')}
+          />
         </div>
 
         <button

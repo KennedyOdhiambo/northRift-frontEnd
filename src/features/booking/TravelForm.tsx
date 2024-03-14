@@ -1,24 +1,21 @@
-import React, { useReducer } from 'react';
+import { useContext, useReducer } from 'react';
 import DropDownSelect from '../../components/DropDownSelect';
 import { CiLocationOn } from 'react-icons/ci';
 import CustomDatePicker from '../../components/CustomDatepicker';
 import Button from '../../components/Button';
+import useTravelRoutes from '../../hooks/useTravelRoutes';
+import { GlobalContext } from '../../context/GlobalContext';
 
-const sampleLocation = [
-  { id: 101, value: 'Nairobi' },
-  { id: 102, value: 'Nakuru' },
-];
-
-type State = {
+export type State = {
   departureDate: Date | null;
-  departure: number | null;
-  destination: number | null;
+  departure: string | null;
+  destination: string | null;
 };
 
 type Action =
   | { type: 'setDepartureDate'; payload: Date | null }
-  | { type: 'setDeparture'; payload: number | null }
-  | { type: 'setDestination'; payload: number | null };
+  | { type: 'setDeparture'; payload: string | null }
+  | { type: 'setDestination'; payload: string | null };
 
 const initialState = {
   departureDate: null,
@@ -42,8 +39,22 @@ function reducer(state: State, action: Action) {
 export default function TravelForm() {
   const [state, dispatch] = useReducer(reducer, initialState);
 
+  const globalContext = useContext(GlobalContext);
+
+  const travelRoutes = useTravelRoutes();
+
+  const travellingFrom = travelRoutes?.map((route) => ({
+    id: route._id,
+    value: route.from,
+  }));
+
+  const travellingDestination = travelRoutes?.map((route) => ({
+    id: route._id,
+    value: route.destination,
+  }));
+
   const handleClick = () => {
-    console.log(state);
+    globalContext?.setRoutesFilter(state);
   };
 
   return (
@@ -51,7 +62,7 @@ export default function TravelForm() {
       <div>
         <DropDownSelect
           handleSelect={(id) => dispatch({ type: 'setDeparture', payload: id })}
-          data={sampleLocation}
+          data={travellingFrom ?? []}
           Icon={CiLocationOn}
           text="Traveling From"
         />
@@ -60,7 +71,7 @@ export default function TravelForm() {
       <div>
         <DropDownSelect
           handleSelect={(id) => dispatch({ type: 'setDestination', payload: id })}
-          data={sampleLocation}
+          data={travellingDestination ?? []}
           Icon={CiLocationOn}
           text="Destination"
         />
