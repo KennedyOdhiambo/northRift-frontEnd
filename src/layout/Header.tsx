@@ -41,11 +41,24 @@ const Header = () => {
       {
         <>
           <ModalWindowV2 isOpen={logIn} onClose={() => setLogIn(false)}>
-            {<LoginForm />}
+            {
+              <LoginForm
+                ifSuccesfull={() => {
+                  setLogIn(false);
+                }}
+              />
+            }
           </ModalWindowV2>
 
           <ModalWindowV2 isOpen={signUp} onClose={() => setSignUp(false)}>
-            {<SignupForm />}
+            {
+              <SignupForm
+                ifSuccesfull={() => {
+                  setSignUp(false);
+                  setLogIn(true);
+                }}
+              />
+            }
           </ModalWindowV2>
         </>
       }

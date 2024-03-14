@@ -1,15 +1,11 @@
-import { useState } from 'react';
 import HeroImage from '../assets/heroImage.svg';
-import ModalWindow from '../components/ModalWindow';
 import ScheduledDepartures from '../features/booking/ScheduledDepartures';
 import TripSelection from '../features/booking/TripSelection';
 import TestimonialsSection from '../features/testimonials/TestimonialsSection';
 import WhyUsSection from '../features/whyUs/WhyUsSection';
-import Booking from '../features/booking/Booking';
 import Footer from '../layout/Footer';
 
 export default function HomePage() {
-  const [bookingModal, setBookingModal] = useState(false);
   return (
     <>
       <main className="">
@@ -21,7 +17,7 @@ export default function HomePage() {
           <div className=" absolute mt-28 w-full ">
             <div className="flex flex-col justify-center items-center gap-20  ">
               <ScheduledDepartures />
-              {/* <Shuttlescard setBookingModal={setBookingModal} /> */}
+
               <WhyUsSection />
               <TestimonialsSection />
             </div>
@@ -29,8 +25,6 @@ export default function HomePage() {
           </div>
         </div>
       </main>
-
-      <ModalWindow showmodal={bookingModal}>{<Booking onModalClose={() => setBookingModal(false)} />}</ModalWindow>
     </>
   );
 }

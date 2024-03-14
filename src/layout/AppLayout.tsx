@@ -5,7 +5,7 @@ export default function AppLayout() {
   return (
     <div>
       <Header />
-      <main>
+      <main className=" bg-zinc-50">
         <Outlet />
       </main>
     </div>
