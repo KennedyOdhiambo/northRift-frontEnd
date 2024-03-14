@@ -18,7 +18,7 @@ export default function CustomDatePicker({ selectedDate, handleDateChange, text 
     <div className="relative">
       <button
         type="button"
-        className={`flex items-center h-14 justify-between w-fit border-b bg-white p-3 text-gray-400 ${
+        className={`flex items-center h-14 justify-between w-48 border-b bg-white p-3 text-gray-400 ${
           isOpen ? 'border-cyan-600' : 'border-gray-400'
         }`}
         onClick={() => setIsOpen(!isOpen)}
@@ -30,8 +30,15 @@ export default function CustomDatePicker({ selectedDate, handleDateChange, text 
       </button>
 
       {isOpen && (
-        <div ref={datePickerRef} className="absolute left-0 right-0 z-10">
-          <DatePicker selected={selectedDate} onChange={handleDateChange} inline />
+        <div ref={datePickerRef} className="absolute mt-2 left-0 right-0 z-10">
+          <DatePicker
+            selected={selectedDate}
+            onChange={() => {
+              setIsOpen(false);
+              handleDateChange;
+            }}
+            inline
+          />
         </div>
       )}
     </div>
