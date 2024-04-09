@@ -8,6 +8,7 @@ export type TravelRoute = {
   shuttle: string;
   farePrice: string;
   isActive: boolean;
+  numberPlate: string;
   __v: number;
 };
 

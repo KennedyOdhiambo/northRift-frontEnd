@@ -1,29 +1,27 @@
 import BusSeatComponent from '../shuttles/BusSeatComponent';
 import { FaRegWindowClose } from 'react-icons/fa';
 import BookingConfirmation from './BookingConfirmation';
-
-const sampleSeatData = [
-  { id: 1, status: 'available' },
-  { id: 2, status: 'booked' },
-  { id: 3, status: 'available' },
-  { id: 4, status: 'selected' },
-  { id: 5, status: 'available' },
-  { id: 6, status: 'booked' },
-  { id: 7, status: 'available' },
-  { id: 8, status: 'booked' },
-  { id: 9, status: 'available' },
-  { id: 10, status: 'booked' },
-  { id: 11, status: 'available' },
-  { id: 12, status: 'booked' },
-  { id: 13, status: 'available' },
-  { id: 14, status: 'booked' },
-];
+import Button from '../../components/Button';
+import ticketSVG from '../../assets/ticket-svgrepo-com.svg';
+import { useContext, useState } from 'react';
+import TicketDownload from './TicketDownload';
+import { GlobalContext } from '../../context/GlobalContext';
 
 type BookingProps = {
   onModalClose: () => void;
 };
 
 export default function Booking({ onModalClose }: BookingProps) {
+  const [downloadTicket, setDownloadTicket] = useState(false);
+  const globalContext = useContext(GlobalContext);
+  const username = globalContext?.currentUser;
+  const phoneNumber = globalContext?.phoneNumber;
+  const amount = globalContext?.transportAmount;
+  const from = globalContext?.travellingFrom;
+  const destination = globalContext?.destination;
+  const seats = globalContext?.selectedSeatsCount;
+  const payedAmount = Number(seats) * Number(amount);
+
   return (
     <div className="fixed right-0 h-screen w-[420px] bg-white p-5">
       <div className="flex flex-col gap-5">
@@ -31,9 +29,19 @@ export default function Booking({ onModalClose }: BookingProps) {
           <FaRegWindowClose className=" text-2xl cursor-pointer" title="close" onClick={() => onModalClose()} />
         </div>
 
-        <div className="flex flex-col gap-20">
-          <BusSeatComponent seatData={sampleSeatData} />
-          <BookingConfirmation />
+        <div className="flex flex-col gap-10">
+          <BusSeatComponent totalSeats={14} />
+          <BookingConfirmation setDowloadTicket={setDownloadTicket} />
+          {downloadTicket && (
+            <Button
+              onClick={() => TicketDownload(username, phoneNumber, payedAmount, from, destination, seats)}
+              type="primary"
+              className=" max-w-xs self-center flex flex-row items-center gap-2"
+            >
+              <img src={ticketSVG} alt="Ticket svg" className=" h-4" />
+              Download ticket
+            </Button>
+          )}
         </div>
       </div>
     </div>

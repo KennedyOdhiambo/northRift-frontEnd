@@ -6,6 +6,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { GlobalContextProvider } from './context/GlobalContext';
+import AdminPage from './pages/AdminPage';
 
 function App() {
   const queryClient = new QueryClient({
@@ -23,6 +24,7 @@ function App() {
           <Routes>
             <Route element={<AppLayout />}>
               <Route path="/" element={<HomePage />} />
+              <Route path="admin" element={<AdminPage />}></Route>
             </Route>
           </Routes>
         </BrowserRouter>

@@ -1,8 +1,8 @@
 import { Dispatch, SetStateAction, useContext } from 'react';
 import AvailableShuttles from './AvailableShuttles';
 import { GlobalContext } from '../../context/GlobalContext';
-import useTravelRoutes from '../../hooks/useTravelRoutes';
-import formatDate from '../../utils/formatDate';
+import useTravelRoutes from '../../lib/hooks/useTravelRoutes';
+import formatDate from '../../lib/utils/formatDate';
 
 type ShuttlesCardProps = {
   setBookingModal: Dispatch<SetStateAction<boolean>>;
@@ -33,6 +33,8 @@ export default function Shuttlescard({ setBookingModal }: ShuttlesCardProps) {
           time={shuttle.departureTime}
           seats={shuttle.availableSeats}
           price={shuttle.farePrice}
+          busNumber={shuttle.shuttle}
+          numberPlate={shuttle.numberPlate}
         />
       ))}
     </div>

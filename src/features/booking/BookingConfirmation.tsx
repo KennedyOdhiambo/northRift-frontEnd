@@ -1,27 +1,80 @@
-import { FaCalendar, FaClock, FaRoute } from 'react-icons/fa6';
-import TransitInfoCard from '../shuttles/TransitInfoCard';
 import InputField from '../../components/InputField';
 import Button from '../../components/Button';
+import { Dispatch, SetStateAction, useContext, useEffect, useState } from 'react';
+import { GlobalContext } from '../../context/GlobalContext';
+import { useMutation } from '@tanstack/react-query';
+import { initiatePayment } from '../../services/paymentService';
+import { toast } from 'react-toastify';
 
-export default function BookingConfirmation() {
+type BookingConfirmationProps = {
+  setDowloadTicket: Dispatch<SetStateAction<boolean>>;
+};
+
+export default function BookingConfirmation({ setDowloadTicket }: BookingConfirmationProps) {
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [customerName, setCustomerName] = useState('');
+  const globalContaxt = useContext(GlobalContext);
+  const selectedSeatCount = globalContaxt?.selectedSeatsCount;
+  const ticketPrice = globalContaxt?.transportAmount;
+  const selectedShuttle = globalContaxt?.selectedShuttle;
+  const amount = Number(ticketPrice) * Number(selectedSeatCount);
+
+  const date = new Date();
+  const formattedDate = date.toISOString().slice(0, 10);
+
+  const paymentBody = {
+    phone: phoneNumber,
+    customerName,
+    amount,
+    shuttleNumber: selectedShuttle,
+    bookingDate: formattedDate,
+  };
+
+  useEffect(() => {
+    const customerName = localStorage.getItem('fullName');
+    setCustomerName(customerName ?? '');
+  }, []);
+
+  const {
+    mutate: paymentInitiation,
+    isPending,
+    isSuccess,
+  } = useMutation({
+    mutationFn: initiatePayment,
+    onSuccess: (data) => {
+      toast.success(data.message);
+      setDowloadTicket(true);
+    },
+    onError: (error) => toast.error(error.message),
+  });
+
+  const handleSubmit = () => {
+    paymentInitiation(paymentBody);
+  };
+
   return (
     <div className="flex flex-col gap-5 p-3 border border-gray-200 rounded-lg">
-      <div className="flex flex-row gap-3 items-center">
-        <TransitInfoCard title="Route:" details="Nairobi to Eldoret" icon={<FaRoute />} />
-        <TransitInfoCard title="Date:" details="01/01/2023" icon={<FaCalendar />} />
-        <TransitInfoCard title="Departure:" details="11:45 AM" icon={<FaClock />} />
-      </div>
-
       <p className="text-base font-semibold">
-        selected Seat : <span>5</span>
+        Selected Seats : <span>{selectedSeatCount}</span>
       </p>
 
       <div className="flex flex-col gap-3">
-        <InputField label={'Passenger Name'} type={'text'} id={'passengerName'} />
-        <InputField label="Phone Number" type="tel" id="phoneNumber" />
+        <InputField label="Total Amount" type="number" id="totalAmount" value={amount} readOnly></InputField>
+        <InputField label={'Passenger Name'} type={'text'} id={'passengerName'} value={customerName ?? ''} />
+        <InputField
+          label="Phone Number"
+          type="tel"
+          id="phoneNumber"
+          onChange={(e) => {
+            setPhoneNumber(e);
+            globalContaxt?.setPhoneNumber(e);
+          }}
+        />
       </div>
 
-      <Button type="primary">Proceed to Payment </Button>
+      <Button type="primary" onClick={() => handleSubmit()}>
+        {isPending ? 'initiating ...' : isSuccess ? 'initiated' : 'Initiate Payment'}
+      </Button>
     </div>
   );
 }

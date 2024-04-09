@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import { RiArrowDropDownLine, RiArrowDropUpLine } from 'react-icons/ri';
 import 'react-datepicker/dist/react-datepicker.css';
-import useOutsideClick from '../hooks/useOutsideClick';
+import useOutsideClick from '../lib/hooks/useOutsideClick';
 
 type DatePickerProps = {
   selectedDate: Date | null;
@@ -33,9 +33,9 @@ export default function CustomDatePicker({ selectedDate, handleDateChange, text 
         <div ref={datePickerRef} className="absolute mt-2 left-0 right-0 z-10">
           <DatePicker
             selected={selectedDate}
-            onChange={() => {
+            onChange={(date: Date) => {
               setIsOpen(false);
-              handleDateChange;
+              handleDateChange(date);
             }}
             inline
           />

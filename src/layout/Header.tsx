@@ -1,13 +1,20 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { BsTelephone } from 'react-icons/bs';
 import * as Ci from 'react-icons/ci';
 import ModalWindowV2 from '../components/ModalWindowV2';
 import SignupForm from '../features/auth/SignupForm';
 import LoginForm from '../features/auth/LoginForm';
+import { GlobalContext } from '../context/GlobalContext';
+import { RiAdminLine } from 'react-icons/ri';
+import { MdOutlineLogout } from 'react-icons/md';
 
 const Header = () => {
-  const [logIn, setLogIn] = useState(false);
   const [signUp, setSignUp] = useState(false);
+  const globalContext = useContext(GlobalContext);
+  const loginModal = globalContext?.loginModal;
+  const setloginmodal = globalContext?.setLoginModal;
+  const currentUser = globalContext?.currentUser;
+
   return (
     <>
       <div className="h-12 bg-cyan-600 text-white text-sm p-2 flex flex-row justify-between items-center md:px-20">
@@ -23,28 +30,49 @@ const Header = () => {
           </div>
         </div>
 
-        <div className="w-full">
-          <div className="flex flex-row w-full justify-end items-center gap-3">
-            <div onClick={() => setLogIn(true)} className="flex flex-row items-center gap-1 cursor-pointer">
-              <Ci.CiLock />
-              <span>Log in</span>
-            </div>
-
-            <div onClick={() => setSignUp(true)} className="flex flex-row items-center gap-1 cursor-pointer">
-              <Ci.CiUser />
-              <span>Sign Up</span>
+        {currentUser ? (
+          <div className="flex flex-row w-full justify-end items-center gap-3 ">
+            <h1>{currentUser}</h1>
+            <div onClick={() => window.location.reload()} className="flex flex-row items-center gap-1 cursor-pointer">
+              <MdOutlineLogout />
+              <span>Log Out</span>
             </div>
           </div>
-        </div>
+        ) : (
+          <div className="w-full">
+            <div className="flex flex-row w-full justify-end items-center gap-3">
+              <div
+                onClick={() => setloginmodal && setloginmodal(true)}
+                className="flex flex-row items-center gap-1 cursor-pointer"
+              >
+                <Ci.CiLock />
+                <span>Log in</span>
+              </div>
+
+              <div onClick={() => setSignUp(true)} className="flex flex-row items-center gap-1 cursor-pointer">
+                <Ci.CiUser />
+                <span>Sign Up</span>
+              </div>
+
+              <div
+                onClick={() => setloginmodal && setloginmodal(true)}
+                className="flex flex-row items-center gap-1 cursor-pointer"
+              >
+                <RiAdminLine />
+                <span>Admin</span>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       {
         <>
-          <ModalWindowV2 isOpen={logIn} onClose={() => setLogIn(false)}>
+          <ModalWindowV2 isOpen={loginModal ?? false} onClose={() => setloginmodal && setloginmodal(false)}>
             {
               <LoginForm
                 ifSuccesfull={() => {
-                  setLogIn(false);
+                  setloginmodal && setloginmodal(false);
                 }}
               />
             }
@@ -55,7 +83,7 @@ const Header = () => {
               <SignupForm
                 ifSuccesfull={() => {
                   setSignUp(false);
-                  setLogIn(true);
+                  setloginmodal && setloginmodal(true);
                 }}
               />
             }

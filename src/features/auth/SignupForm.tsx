@@ -19,7 +19,7 @@ export default function SignupForm({ ifSuccesfull }: { ifSuccesfull: () => void 
       toast.success('Account succesfully created');
       ifSuccesfull();
     },
-    onError: (err) => toast.error(err.message),
+    onError: () => toast.error('error registering use ; check phonenumber and password and try again !'),
   });
 
   const onSubmit = (data: SignupFormData) => {

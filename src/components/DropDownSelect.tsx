@@ -1,25 +1,34 @@
 import { RefObject, useState } from 'react';
 import { IconType } from 'react-icons';
 import { RiArrowDropDownLine, RiArrowDropUpLine } from 'react-icons/ri';
-import useOutsideClick from '../hooks/useOutsideClick';
+import useOutsideClick from '../lib/hooks/useOutsideClick';
 
 type DropdownProps = {
   data: Array<{ id: string; value: string }>;
   Icon?: IconType;
   text: string;
   buttonClassName?: string;
-  handleSelect: (value: string) => void;
+  handleSelect?: (value: string) => void;
+  handleShuttle?: (id: string) => void;
 };
 
-export default function DropDownSelect({ data, Icon, text, handleSelect, buttonClassName }: DropdownProps) {
+export default function DropDownSelect({
+  data,
+  Icon,
+  text,
+  handleSelect,
+  buttonClassName,
+  handleShuttle,
+}: DropdownProps) {
   const [selectedValue, setSelectedValue] = useState('');
   const [dropDown, setDropdown] = useState(false);
   const dropdownRef = useOutsideClick(() => setDropdown(false), dropDown) as RefObject<HTMLDivElement>;
 
-  const handleSelectedOption = (value: string) => {
-    handleSelect(value);
+  const handleSelectedOption = (value: string, id: string) => {
+    handleSelect && handleSelect(value);
     setSelectedValue(value);
     setDropdown(false);
+    handleShuttle && handleShuttle(id);
   };
   return (
     <div className={`relative w-full md:mt-0 md:flex-1`}>
@@ -45,7 +54,7 @@ export default function DropDownSelect({ data, Icon, text, handleSelect, buttonC
                 key={entry.id}
                 className="cursor-pointer p-2 px-4 hover:bg-gray-100 text-stone-500 text-sm"
                 onClick={() => {
-                  handleSelectedOption(entry.value);
+                  handleSelectedOption(entry.value, entry.id);
                 }}
               >
                 {entry.value}
