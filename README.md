@@ -1,30 +1,54 @@
-# React + TypeScript + Vite
+# Bus Ticketing System (Frontend)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Frontend system for a web-based bus ticketing application written in TypeScript. This project is built with vanilla React.js and includes M-pesa payment integration.
 
-Currently, two official plugins are available:
+## Installation and Setup
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### Clone the Repository
+```bash
+git clone https://github.com/your-username/bus-ticketing-frontend.git
+cd bus-ticketing-frontend
 
-## Expanding the ESLint configuration
+Install Dependencies
+Make sure you have Node.js and npm installed.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+bash
+Copy code
+npm install
+Backend Connection
+This frontend system is designed to work with the backend system. You will need to set up the backend system and configure the API endpoints in the code.
 
-- Configure the top-level `parserOptions` property like this:
+Clone the backend repository:
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
+bash
+Copy code
+git clone https://github.com/your-username/bus-ticketing-backend.git
+Follow the README in the backend repository to set it up and get the API endpoints.
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+In the frontend code, configure the API endpoints in the src/config.ts file:
+
+typescript
+Copy code
+const API_BASE_URL = 'http://backend-api-url.com'; // Change this to your backend API URL
+Usage
+After the installation and backend setup, you can start the development server:
+
+bash
+Copy code
+npm start
+This will run the app in development mode. Open http://localhost:3000 to view it in your browser.
+
+Features
+View available bus routes and schedules
+Select seats and book tickets
+Integration with M-pesa for payment
+Contributing
+Contributions are welcome! If you have any ideas, features, or bug fixes, please open an issue or create a pull request.
+
+License
+This project is licensed under the MIT License.
+
+vbnet
+Copy code
+
+Copy this markdown content and paste it into your `README.md` file in your GitHub reposito
